@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  initial_investment: 9.99
+  annual_contribution: 9.99
+  expected_return: 1.5
+  volatility: 1.5
+  investment_period: 1
+
+two:
+  initial_investment: 9.99
+  annual_contribution: 9.99
+  expected_return: 1.5
+  volatility: 1.5
+  investment_period: 1
