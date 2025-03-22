@@ -49,6 +49,8 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem 'rspec-rails', '~> 6.0'
   gem 'shoulda-matchers', '~> 5.0'
+  gem 'pry-rails'
+  gem 'pry-byebug'
 end
 
 group :development do
