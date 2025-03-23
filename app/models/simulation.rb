@@ -8,11 +8,11 @@ class Simulation < ApplicationRecord
   after_initialize :set_defaults, if: :new_record?
 
   def set_defaults
-    self.initial_investment ||= 1000
-    self.annual_contribution ||= 1000
-    self.expected_return ||= 7.5
-    self.volatility ||= 15
-    self.investment_period ||= 30
+    self.initial_investment = 1000 if self.initial_investment.nil?
+    self.annual_contribution = 1000 if self.annual_contribution.nil?
+    self.expected_return = 7.5 if self.expected_return.nil?
+    self.volatility = 15 if self.volatility.nil?
+    self.investment_period = 30 if self.investment_period.nil?
   end
 
   def random_annual_return
