@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 const SimulationForm = () => {
   const [initialInvestment, setInitialInvestment] = useState('');
   const [annualContribution, setAnnualContribution] = useState('');
@@ -33,26 +32,29 @@ const SimulationForm = () => {
   return (
     <div>
       <h2>Retirement Simulation</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-testid="simulation-form">
         <div>
-          <label>Initial Investment:</label>
+          <label htmlFor="initial-investment">Initial Investment:</label>
           <input
+            id="initial-investment"
             type="number"
             value={initialInvestment}
             onChange={(e) => setInitialInvestment(e.target.value)}
           />
         </div>
         <div>
-          <label>Annual Contribution:</label>
+          <label htmlFor="annual-contribution">Annual Contribution:</label>
           <input
+            id="annual-contribution"
             type="number"
             value={annualContribution}
             onChange={(e) => setAnnualContribution(e.target.value)}
           />
         </div>
         <div>
-          <label>Expected Return (%):</label>
+          <label htmlFor="expected-return">Expected Return (%):</label>
           <input
+            id="expected-return"
             type="number"
             step="0.1"
             value={expectedReturn}
@@ -60,8 +62,9 @@ const SimulationForm = () => {
           />
         </div>
         <div>
-          <label>Volatility (%):</label>
+          <label htmlFor="volatility">Volatility (%):</label>
           <input
+            id="volatility"
             type="number"
             step="0.1"
             value={volatility}
@@ -69,8 +72,9 @@ const SimulationForm = () => {
           />
         </div>
         <div>
-          <label>Investment Period (years):</label>
+          <label htmlFor="investment-period">Investment Period (years):</label>
           <input
+            id="investment-period"
             type="number"
             value={investmentPeriod}
             onChange={(e) => setInvestmentPeriod(e.target.value)}
