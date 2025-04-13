@@ -1,0 +1,8 @@
+<h1>All Simulations</h1>
+<ul>
+  <% @simulations.each do |simulation| %>
+    <li>
+      <%= link_to "Simulation ##{simulation.id}", simulation_path(simulation) %>
+    </li>
+  <% end %>
+</ul>

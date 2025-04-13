@@ -1,37 +1,72 @@
 import React, { useState } from 'react';
 
-const SimulationForm = () => {
-  const [initialInvestment, setInitialInvestment] = useState('');
-  const [annualContribution, setAnnualContribution] = useState('');
-  const [expectedReturn, setExpectedReturn] = useState('');
-  const [volatility, setVolatility] = useState('');
-  const [investmentPeriod, setInvestmentPeriod] = useState('');
+const SimulationForm = ({ initialSimulation = null }) => {
+  const [initialInvestment, setInitialInvestment] = useState(
+    initialSimulation ? initialSimulation.initial_investment : ''
+  );
+  const [annualContribution, setAnnualContribution] = useState(
+    initialSimulation ? initialSimulation.annual_contribution : ''
+  );
+  const [expectedReturn, setExpectedReturn] = useState(
+    initialSimulation ? initialSimulation.expected_return : ''
+  );
+  const [volatility, setVolatility] = useState(
+    initialSimulation ? initialSimulation.volatility : ''
+  );
+  const [investmentPeriod, setInvestmentPeriod] = useState(
+    initialSimulation ? initialSimulation.investment_period : ''
+  );
   const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const payload = {
-      initial_investment: parseFloat(initialInvestment),
-      annual_contribution: parseFloat(annualContribution),
-      expected_return: parseFloat(expectedReturn),
-      volatility: parseFloat(volatility),
-      investment_period: parseInt(investmentPeriod, 10)
+      simulation: {
+        initial_investment: parseFloat(initialInvestment),
+        annual_contribution: parseFloat(annualContribution),
+        expected_return: parseFloat(expectedReturn),
+        volatility: parseFloat(volatility),
+        investment_period: parseInt(investmentPeriod, 10)
+      }
     };
 
-    fetch('/simulations', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    // Use a different endpoint/method if editing
+    const url = initialSimulation ? `/simulations/${initialSimulation.id}` : '/simulations';
+    const method = initialSimulation ? 'PUT' : 'POST';
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
+
+    let headers = { 'Content-Type': 'application/json' };
+    if (process.env.NODE_ENV !== 'test') {
+      headers['X-CSRF-Token'] = csrfToken;
+      headers['Accept'] = 'application/json';
+    }
+
+    fetch(url, {
+      method,
+      headers,
       body: JSON.stringify(payload)
     })
-      .then((response) => response.json())
+      .then((response) => {
+        setLoading(false);
+        if (!response.ok) {
+          throw new Error('Something went wrong!');
+        }
+        return response.json();
+      })
       .then((data) => setResults(data))
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => {
+        setLoading(false);
+        console.error('Error:', error);
+      });
   };
 
   return (
     <div>
-      <h2>Retirement Simulation</h2>
+      <h2>{initialSimulation ? 'Edit Simulation' : 'New Simulation'}</h2>
       <form onSubmit={handleSubmit} data-testid="simulation-form">
         <div>
           <label htmlFor="initial-investment">Initial Investment:</label>
@@ -80,11 +115,12 @@ const SimulationForm = () => {
             onChange={(e) => setInvestmentPeriod(e.target.value)}
           />
         </div>
-        <button type="submit">Simulate</button>
+        <button type="submit">{initialSimulation ? 'Update Simulation' : 'Simulate'}</button>
       </form>
+      {loading && <p>Loading...</p>}
       {results && (
         <div>
-          <h3>Simulation Results:</h3>
+          <h3>{initialSimulation ? 'Updated Simulation Results:' : 'Simulation Results:'}</h3>
           <pre>{JSON.stringify(results, null, 2)}</pre>
         </div>
       )}

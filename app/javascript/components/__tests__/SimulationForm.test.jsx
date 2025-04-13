@@ -17,7 +17,7 @@ describe('SimulationForm Component', () => {
     render(<SimulationForm />);
     
     // Check for the form title
-    expect(screen.getByText(/Retirement Simulation/i)).toBeInTheDocument();
+    expect(screen.getByText(/New Simulation/i)).toBeInTheDocument();
     
     // Check for all input fields
     expect(screen.getByLabelText(/Initial Investment/i)).toBeInTheDocument();
@@ -68,11 +68,13 @@ describe('SimulationForm Component', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        initial_investment: 1000.0,
-        annual_contribution: 2000.0,
-        expected_return: 5.5,
-        volatility: 2.3,
-        investment_period: 30,
+        simulation: {
+          initial_investment: 1000,
+          annual_contribution: 2000,
+          expected_return: 5.5,
+          volatility: 2.3,
+          investment_period: 30
+        }
       }),
     }));
     

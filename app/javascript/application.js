@@ -5,11 +5,11 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import SimulationForm from './components/SimulationForm';
 
-console.log("application.js loaded");
-
 document.addEventListener('DOMContentLoaded', () => {
-  const simulationRoot = document.getElementById('simulation-root');
-  if (simulationRoot) {
-    createRoot(simulationRoot).render(<SimulationForm />);
+  const container = document.getElementById('simulation-form-container');
+  if (container) {
+    const simulationData = container.getAttribute('data-simulation');
+    const initialSimulation = simulationData ? JSON.parse(simulationData) : null;
+    createRoot(container).render(<SimulationForm initialSimulation={initialSimulation} />);
   }
 });
