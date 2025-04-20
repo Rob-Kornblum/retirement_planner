@@ -115,13 +115,15 @@ const SimulationForm = ({ initialSimulation = null }) => {
             onChange={(e) => setInvestmentPeriod(e.target.value)}
           />
         </div>
-        <button type="submit">{initialSimulation ? 'Update Simulation' : 'Simulate'}</button>
+        <button type="submit" disabled={loading} data-testid="submit-button">
+          {loading ? 'Submitting...' : (initialSimulation ? 'Update Simulation' : 'Simulate')}
+        </button>
       </form>
       {loading && <p>Loading...</p>}
       {results && (
         <div>
           <h3>{initialSimulation ? 'Updated Simulation Results:' : 'Simulation Results:'}</h3>
-          <pre>{JSON.stringify(results, null, 2)}</pre>
+          <pre data-testid="simulation-output">{JSON.stringify(results, null, 2)}</pre>
         </div>
       )}
     </div>
