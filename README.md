@@ -1,24 +1,46 @@
-# README
+# Retirement Planner (WIP)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a work-in-progress web application to help users model retirement savings over time.
 
-Things you may want to cover:
+Built with:
+- Ruby on Rails (API backend)
+- React (frontend, via ESBuild)
+- SCSS Modules for styling
+- Jest and Testing Library for unit tests
 
-* Ruby version
+## Current Features
 
-* System dependencies
+- Dynamic simulation form (create/update retirement projections)
+- Supports POST and PUT requests to `/simulations`
+- Form validation, loading states, and basic result display
+- Modular SCSS styling for a clean UI
+- Extensive Jest tests covering all major scenarios
 
-* Configuration
+## Local Setup
 
-* Database creation
+1. Install dependencies:
 
-* Database initialization
+```bash
+bundle install
+npm install
+```
 
-* How to run the test suite
+2. Run the app in development:
 
-* Services (job queues, cache servers, search engines, etc.)
+```bash
+bin/dev
+```
 
-* Deployment instructions
+This runs both the Rails server and the ESBuild watcher for JavaScript.
 
-* ...
+3. Run tests:
+
+```bash
+npm test
+```
+
+## Notes
+
+- This is not yet hooked up to a database or persisted backend.
+- Styling is intentionally minimal and modular.
+- This app is intended to showcase full-stack skills with React and Rails.
