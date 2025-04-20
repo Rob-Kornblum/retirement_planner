@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './SimulationForm.module.scss';
 
 const SimulationForm = ({ initialSimulation = null }) => {
   const [initialInvestment, setInitialInvestment] = useState(
@@ -65,7 +66,7 @@ const SimulationForm = ({ initialSimulation = null }) => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>{initialSimulation ? 'Edit Simulation' : 'New Simulation'}</h2>
       <form onSubmit={handleSubmit} data-testid="simulation-form">
         <div>
@@ -121,7 +122,7 @@ const SimulationForm = ({ initialSimulation = null }) => {
       </form>
       {loading && <p>Loading...</p>}
       {results && (
-        <div>
+        <div className={styles.results}>
           <h3>{initialSimulation ? 'Updated Simulation Results:' : 'Simulation Results:'}</h3>
           <pre data-testid="simulation-output">{JSON.stringify(results, null, 2)}</pre>
         </div>

@@ -1,6 +1,10 @@
 module.exports = {
-  testEnvironment: "jsdom",
+  moduleNameMapper: {
+    '\\.module\\.scss$': 'identity-obj-proxy',
+    '\\.scss$': 'identity-obj-proxy',
+  },
+  testEnvironment: 'jsdom',
   transform: {
-    "^.+\\.[tj]sx?$": "babel-jest"
-  }
+    '^.+\\.(js|jsx)$': 'babel-jest',
+  },
 };
