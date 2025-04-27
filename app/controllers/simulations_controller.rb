@@ -24,6 +24,10 @@ class SimulationsController < ApplicationController
 
   def index
     @simulations = Simulation.all
+    respond_to do |format|
+      format.html
+      format.json { render json: @simulations }
+    end
   end
 
   def destroy

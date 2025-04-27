@@ -8,13 +8,24 @@ esbuild
     entryPoints: ["app/javascript/application.js"],
     bundle: true,
     outdir: "app/assets/builds",
-    plugins: [sassPlugin()],
+    plugins: [
+      sassPlugin({
+        type: 'css',
+        // enable CSS Modules for .module.scss files
+        modules: {
+          // naming convention for generated class names
+          auto: /\.module\.(scss|sass)$/,
+          generateScopedName: '[name]__[local]___[hash:base64:5]'
+        }
+      })
+    ],
     sourcemap: true,
     format: "esm",
     target: ["es2020"],
     logLevel: "info",
     loader: {
       ".js": "jsx",
+      ".scss": "css",
     },
   })
   .then((ctx) => {
