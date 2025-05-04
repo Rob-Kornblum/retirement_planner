@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import SimulationForm from './SimulationForm';
-import './SimulationsIndex.scss';
+import { Link } from 'react-router-dom';
+import './SimulationsIndex.scss';   // keep this if you want your .scss styles
 
 const SimulationsIndex = () => {
   const [simulations, setSimulations] = useState([]);
-  const [editingSimulation, setEditingSimulation] = useState(null);
 
   useEffect(() => {
     fetch('/simulations.json')
-      .then((res) => res.json())
+      .then(res => res.json())
       .then(setSimulations)
       .catch(console.error);
   }, []);
@@ -23,41 +22,31 @@ const SimulationsIndex = () => {
       },
     })
       .then((res) => {
-        if (res.ok) {
-          setSimulations((prev) => prev.filter((s) => s.id !== id));
-        }
+        if (res.ok) setSimulations((prev) => prev.filter((s) => s.id !== id));
       })
       .catch(console.error);
   };
 
-  const handleEdit = (simulation) => setEditingSimulation(simulation);
-
   return (
-    <div>
-      <h1>Simulations</h1>
-      {editingSimulation && (
-        <SimulationForm
-          initialSimulation={editingSimulation}
-          onSuccess={(updated) => {
-            setSimulations((prev) =>
-              prev.map((s) => (s.id === updated.id ? updated : s))
-            );
-            setEditingSimulation(null);
-          }}
-          onCancel={() => setEditingSimulation(null)}
-        />
-      )}
-      <ul>
+    <div className="simulations-index">
+      <div className="index-header">
+        <h1>Simulations</h1>
+        <Link to="/simulations/new">
+          <button>New Simulation</button>
+        </Link>
+      </div>
+
+      <ul className="sim-list">
         {simulations.map((sim) => (
-          <li key={sim.id}>
-            <div className="list-item">
-              <span>
-                Simulation #{sim.id} — Initial: {sim.initial_investment}, Contribution: {sim.annual_contribution}, Return: {sim.expected_return}%
-              </span>
-              <div className="actions">
-                <button onClick={() => handleEdit(sim)}>Edit</button>
-                <button onClick={() => handleDelete(sim.id)}>Delete</button>
-              </div>
+          <li key={sim.id} className="list-item">
+            <span>
+              #{sim.id}: Initial ${sim.initial_investment}, Contrib ${sim.annual_contribution}, Return {sim.expected_return}%
+            </span>
+            <div className="actions">
+              <Link to={`/simulations/${sim.id}/edit`}>
+                <button>Edit</button>
+              </Link>
+              <button onClick={() => handleDelete(sim.id)}>Delete</button>
             </div>
           </li>
         ))}

@@ -20,6 +20,10 @@ class SimulationsController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.json { render json: @simulation }
+    end
   end
 
   def index
@@ -38,13 +42,18 @@ class SimulationsController < ApplicationController
   def edit
   end
 
-  def update
-    if @simulation.update(simulation_params)
-      redirect_to simulation_path(@simulation), notice: 'Simulation updated successfully!'
-    else
-      render :edit
+    # PUT/PATCH /simulations/:id
+    def update
+      respond_to do |format|
+        if @simulation.update(simulation_params)
+          format.html { redirect_to simulation_path(@simulation), notice: 'Simulation updated successfully!' }
+          format.json { render json: @simulation, status: :ok }
+        else
+          format.html { render :edit }
+          format.json { render json: @simulation.errors, status: :unprocessable_entity }
+        end
+      end
     end
-  end
 
   private
 

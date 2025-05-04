@@ -1,24 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styles from './SimulationForm.module.scss';
 
-const SimulationForm = ({ initialSimulation = null }) => {
+const SimulationForm = ({ 
+  initialSimulation = null, 
+  onSuccess = () => {},
+  onCancel = () => {}  
+}) => {
+  // React Router ID param
+  const { id } = useParams();
+  // state for simulation loaded from server when editing via route
+  const [routeSimulation, setRouteSimulation] = useState(null);
+
+  // decide which simulation to edit: prop or route
+  const editingSimulation = initialSimulation || routeSimulation;
+
   const [initialInvestment, setInitialInvestment] = useState(
-    initialSimulation ? initialSimulation.initial_investment : ''
+    editingSimulation ? editingSimulation.initial_investment : ''
   );
   const [annualContribution, setAnnualContribution] = useState(
-    initialSimulation ? initialSimulation.annual_contribution : ''
+    editingSimulation ? editingSimulation.annual_contribution : ''
   );
   const [expectedReturn, setExpectedReturn] = useState(
-    initialSimulation ? initialSimulation.expected_return : ''
+    editingSimulation ? editingSimulation.expected_return : ''
   );
   const [volatility, setVolatility] = useState(
-    initialSimulation ? initialSimulation.volatility : ''
+    editingSimulation ? editingSimulation.volatility : ''
   );
   const [investmentPeriod, setInvestmentPeriod] = useState(
-    initialSimulation ? initialSimulation.investment_period : ''
+    editingSimulation ? editingSimulation.investment_period : ''
   );
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // fetch simulation when route id present
+  useEffect(() => {
+    if (id) {
+      fetch(`/simulations/${id}.json`)
+        .then(res => res.json())
+        .then(setRouteSimulation)
+        .catch(console.error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (editingSimulation) {
+      setInitialInvestment(editingSimulation.initial_investment);
+      setAnnualContribution(editingSimulation.annual_contribution);
+      setExpectedReturn(editingSimulation.expected_return);
+      setVolatility(editingSimulation.volatility);
+      setInvestmentPeriod(editingSimulation.investment_period);
+    } else {
+      setInitialInvestment('');
+      setAnnualContribution('');
+      setExpectedReturn('');
+      setVolatility('');
+      setInvestmentPeriod('');
+    }
+  }, [editingSimulation]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,9 +73,11 @@ const SimulationForm = ({ initialSimulation = null }) => {
       }
     };
 
-    // Use a different endpoint/method if editing
-    const url = initialSimulation ? `/simulations/${initialSimulation.id}` : '/simulations';
-    const method = initialSimulation ? 'PUT' : 'POST';
+    // Use prop or route-based edit indicator
+    const url = editingSimulation
+      ? `/simulations/${editingSimulation.id}`
+      : '/simulations';
+    const method = editingSimulation ? 'PUT' : 'POST';
     const csrfMeta = document.querySelector('meta[name="csrf-token"]');
     const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
@@ -58,7 +99,10 @@ const SimulationForm = ({ initialSimulation = null }) => {
         }
         return response.json();
       })
-      .then((data) => setResults(data))
+      .then((data) => { 
+        setResults(data);
+        onSuccess(data);
+      })
       .catch((error) => {
         setLoading(false);
         console.error('Error:', error);
@@ -67,7 +111,7 @@ const SimulationForm = ({ initialSimulation = null }) => {
 
   return (
     <div className={styles.container}>
-      <h2>{initialSimulation ? 'Edit Simulation' : 'New Simulation'}</h2>
+      <h2>{editingSimulation ? 'Edit Simulation' : 'New Simulation'}</h2>
       <form onSubmit={handleSubmit} data-testid="simulation-form">
         <div>
           <label htmlFor="initial-investment">Initial Investment:</label>
@@ -117,13 +161,18 @@ const SimulationForm = ({ initialSimulation = null }) => {
           />
         </div>
         <button type="submit" disabled={loading} data-testid="submit-button">
-          {loading ? 'Submitting...' : (initialSimulation ? 'Update Simulation' : 'Simulate')}
+          {loading ? 'Submitting...' : (editingSimulation ? 'Update Simulation' : 'Simulate')}
         </button>
+        {editingSimulation && (
+          <button type="button" onClick={onCancel} disabled={loading}>
+            Cancel
+          </button>
+        )}
       </form>
       {loading && <p>Loading...</p>}
       {results && (
         <div className={styles.results}>
-          <h3>{initialSimulation ? 'Updated Simulation Results:' : 'Simulation Results:'}</h3>
+          <h3>{editingSimulation ? 'Updated Simulation Results:' : 'Simulation Results:'}</h3>
           <pre data-testid="simulation-output">{JSON.stringify(results, null, 2)}</pre>
         </div>
       )}
