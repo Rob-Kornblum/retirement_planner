@@ -247,4 +247,29 @@ context 'when initial_investment is nil' do
       expect(stats[:max]).to eq(outcomes.max)
     end
   end
+
+  describe 'currency-formatted statistics methods' do
+    let(:simulation) { build_simulation }
+
+    before do
+      outcomes = [100_000, 200_000, 300_000, 400_000, 500_000]
+      allow(simulation).to receive(:run_simulations).and_return(outcomes)
+    end
+
+    it 'returns average_final_balance as currency' do
+      expect(simulation.average_final_balance(5)).to eq('$300,000.00')
+    end
+
+    it 'returns median_final_balance as currency' do
+      expect(simulation.median_final_balance(5)).to eq('$300,000.00')
+    end
+
+    it 'returns min_final_balance as currency' do
+      expect(simulation.min_final_balance(5)).to eq('$100,000.00')
+    end
+
+    it 'returns max_final_balance as currency' do
+      expect(simulation.max_final_balance(5)).to eq('$500,000.00')
+    end
+  end
 end

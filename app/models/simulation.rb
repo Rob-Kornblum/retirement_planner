@@ -56,4 +56,20 @@ class Simulation < ApplicationRecord
       max: outcomes.max
     }
   end
+
+  def average_final_balance(num_runs = 1000)
+    ActionController::Base.helpers.number_to_currency(simulation_statistics(num_runs)[:average])
+  end
+
+  def median_final_balance(num_runs = 1000)
+    ActionController::Base.helpers.number_to_currency(simulation_statistics(num_runs)[:median])
+  end
+
+  def min_final_balance(num_runs = 1000)
+    ActionController::Base.helpers.number_to_currency(simulation_statistics(num_runs)[:min])
+  end
+
+  def max_final_balance(num_runs = 1000)
+    ActionController::Base.helpers.number_to_currency(simulation_statistics(num_runs)[:max])
+  end
 end
