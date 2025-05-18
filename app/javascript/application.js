@@ -13,6 +13,7 @@ import {
 
 import SimulationsIndex from './components/SimulationsIndex'
 import SimulationForm     from './components/SimulationForm'
+import SimulationShow from './components/SimulationShow'
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('react-root')
@@ -39,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
           path="/simulations/:id/edit"
           element={<SimulationForm />}
         />
+
+        {/* show */}
+        <Route path="/simulations/:id" element={<SimulationShow />} />
 
         {/* catch‑all */}
         <Route path="*" element={<h2>Page Not Found</h2>} />

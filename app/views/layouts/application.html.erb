@@ -12,6 +12,7 @@
 
   <body>
     <div id="react-root"></div>
+    <%= yield %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag    "application", "data-turbo-track": "reload" %>
   </body>
