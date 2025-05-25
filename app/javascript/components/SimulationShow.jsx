@@ -33,8 +33,24 @@ export default function SimulationShow() {
   return (
     <div>
       <h1>Simulation #{id}</h1>
-      <p><strong>Initial Investment:</strong> {sim.initial_investment.toLocaleString(undefined, { style: 'currency', currency: 'USD' })}</p>
-      <p><strong>Annual Contribution:</strong> {sim.annual_contribution.toLocaleString(undefined, { style: 'currency', currency: 'USD' })}</p>
+      <p>
+        <strong>Initial Investment:</strong>{" "}
+        {Number(sim.initial_investment).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </p>
+      <p>
+        <strong>Annual Contribution:</strong>{" "}
+        {Number(sim.annual_contribution).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
+      </p>
       <p><strong>Expected Return:</strong> {(sim.expected_return).toFixed(2)}%</p>
       <p><strong>Volatility:</strong> {(sim.volatility).toFixed(2)}%</p>
       <p><strong>Investment Period:</strong> {sim.investment_period} {sim.investment_period === 1 ? 'year' : 'years'}</p>
