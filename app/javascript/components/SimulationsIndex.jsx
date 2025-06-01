@@ -40,7 +40,17 @@ const SimulationsIndex = () => {
         {simulations.map((sim) => (
           <li key={sim.id} className="list-item">
             <span>
-              #{sim.id}: Initial ${sim.initial_investment}, Contrib ${sim.annual_contribution}, Return {sim.expected_return}%
+              #{sim.id}: Initial {Number(sim.initial_investment).toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}, Contrib {Number(sim.annual_contribution).toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}, Return {Number(sim.expected_return).toFixed(2)}%
             </span>
             <div className="actions">
               <Link to={`/simulations/${sim.id}/edit`}>
