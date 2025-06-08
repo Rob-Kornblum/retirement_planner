@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './SimulationsIndex.scss';   // keep this if you want your .scss styles
+import './SimulationsIndex.scss';
 
-const SimulationsIndex = () => {
-  const [simulations, setSimulations] = useState([]);
+const SimulationsIndex = ({ simulations: simulationsProp }) => {
+  const [simulations, setSimulations] = useState(simulationsProp || []);
 
   useEffect(() => {
-    fetch('/simulations.json')
-      .then(res => res.json())
-      .then(setSimulations)
-      .catch(console.error);
-  }, []);
+    if (!simulationsProp) {
+      fetch('/simulations.json')
+        .then(res => res.json())
+        .then(setSimulations)
+        .catch(console.error);
+    }
+  }, [simulationsProp]);
 
   const handleDelete = (id) => {
     if (!window.confirm('Delete this simulation?')) return;
@@ -53,6 +55,9 @@ const SimulationsIndex = () => {
               })}, Return {Number(sim.expected_return).toFixed(2)}%
             </span>
             <div className="actions">
+              <Link to={`/simulations/${sim.id}`}>
+                <button>Show</button>
+              </Link>
               <Link to={`/simulations/${sim.id}/edit`}>
                 <button>Edit</button>
               </Link>
